@@ -1,5 +1,6 @@
 package game;
 
+import game.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,12 +18,16 @@ public class GameInterface {
     private HashMap<Integer, Image> picturesBlack;
     private HashMap<Integer, Image> picturesWhite;
     private HashMap<Integer, Image> dices;
-    private game.model.GameBoard gameBoard;
+    private GameBoard gameBoard;
     private Integer triangleNumberFirst;
     private Integer triangleNumberLast;
     private ArrayList<Integer> step;
     private int count = 0;
     private boolean isWhite = true;
+    private int tempStep = 0;
+    private String turn = "White turn";
+    private boolean isEquals;
+    private boolean isTurnFromHead = false;
 
     @FXML
     private FlowPane upperPart;
@@ -123,15 +128,16 @@ public class GameInterface {
     @FXML
     public void rollDice() {
         step = gameBoard.rollDice();
-        diceValue.setText("Your dices are: \n" + step.get(0) + ", " + step.get(1));
+        diceValue.setText("Your dices are: \n" + step.get(0) + ", " + step.get(1) + "\n" + turn);
         diceOne.setImage(dices.get(step.get(0)));
         diceTwo.setImage(dices.get(step.get(1)));
         diceRoller.setDisable(true);
-
+        tempStep = step.size();
+        isEquals = step.get(0).equals(step.get(1)) && (step.get(0).equals(3) || step.get(0).equals(4) || step.get(0).equals(6));
     }
 
     public GameInterface() throws FileNotFoundException {
-        gameBoard = new game.model.GameBoard();
+        gameBoard = new GameBoard();
         setMapDice();
         setMapImages();
     }
@@ -176,15 +182,15 @@ public class GameInterface {
 
     }
 
-    public Image setTheImage(game.model.Triangle tr) {
-        if (tr.isBlack()){
+    public Image setTheImage(Triangle tr) {
+        if (tr.isBlack()) {
             return picturesBlack.get(tr.getAmount());
         } else {
             return picturesWhite.get(tr.getAmount());
         }
     }
 
-    public void setMapDice() throws FileNotFoundException {
+    private void setMapDice() throws FileNotFoundException {
         dices = new HashMap<>();
         dices.put(1, new Image(new FileInputStream("src/game/resources/diceSide1.jpg")));
         dices.put(2, new Image(new FileInputStream("src/game/resources/diceSide2.jpg")));
@@ -194,7 +200,7 @@ public class GameInterface {
         dices.put(6, new Image(new FileInputStream("src/game/resources/diceSide6.jpg")));
     }
 
-    public void setMapImages() throws FileNotFoundException {
+    private void setMapImages() throws FileNotFoundException {
         picturesBlack = new HashMap<>();
         picturesBlack.put(0, new Image(new FileInputStream("src/game/resources/checkSetBlack0.png")));
         picturesBlack.put(1, new Image(new FileInputStream("src/game/resources/checkSetBlack1.png")));
@@ -232,56 +238,86 @@ public class GameInterface {
         picturesWhite.put(15, new Image(new FileInputStream("src/game/resources/checkSetWhite15.png")));
     }
 
-    @FXML
-    void outThrow(MouseEvent event) {
-        setValue(1000);
-    }
-
-    void setValue(int num){
-        if (count < step.size()){
+    private void setValue(int num) {
+        if (count < tempStep && canMove()) {
             boolean isOk = false;
-            if (triangleNumberFirst == null){
+            if (triangleNumberFirst == null) {
                 triangleNumberFirst = num;
                 //подсвечивать ход
             } else {
                 triangleNumberLast = num;
-                for (int i = 0; i < step.size(); i++){
-                    if (triangleNumberLast == 1000) {
+                for (int i = 0; i < step.size(); i++) {
+                    if (triangleNumberLast == 1000 && gameBoard.canThrowAway(isWhite)) {
                         if (24 - triangleNumberFirst <= step.get(i) && isWhite || !isWhite && triangleNumberFirst > 5 && triangleNumberFirst < 12) {
                             isOk = true;
                             step.remove(i);
-                            step.add(-1);
                             break;
                         }
                     }
-                    if (triangleNumberLast - triangleNumberFirst == step.get(i) || !isWhite && (triangleNumberFirst - 23 + triangleNumberLast == step.get(i))) {
+                    if (triangleNumberLast - triangleNumberFirst == step.get(i) || !isWhite &&
+                            (24 - triangleNumberFirst + triangleNumberLast == step.get(i))) {
                         isOk = true;
+                        if (isTurnFromHead && (triangleNumberFirst == 0 && isWhite || triangleNumberFirst == 12 && !isWhite) && !isEquals) {
+                            isOk = false;
+                            break;
+                        }
                         step.remove(i);
-                        step.add(-1);
                         break;
                     }
                 }
-                if (isOk && gameBoard.step(isWhite, triangleNumberFirst, triangleNumberLast)){
+
+                if (isOk && gameBoard.step(isWhite, triangleNumberFirst, triangleNumberLast)) {
                     count++;
+                    if (triangleNumberFirst == 0 && isWhite || triangleNumberFirst == 12 && !isWhite)
+                        isTurnFromHead = true;
                 }
+
                 triangleNumberLast = null;
                 triangleNumberFirst = null;
-            }
-        } else {
-            count = 0;
-            isWhite = !isWhite;
-            switch (gameBoard.isWinGame()){
-                case 0: diceRoller.setDisable(false);
-                        step.clear();
-                        break;
-                case 1: diceRoller.setText("Black wins"); break;
-                case 2: diceRoller.setText("White wins"); break;
+
+                if (count == tempStep) {
+                    isTurnFromHead = false;
+                    count = 0;
+                    isWhite = !isWhite;
+                    if (isWhite) {
+                        turn = "White turn";
+                    } else {
+                        turn = "Black turn";
+                    }
+                    switch (gameBoard.isWinGame()) {
+                        case 0:
+                            diceRoller.setDisable(false);
+                            step.clear();
+                            break;
+                        case 1:
+                            diceRoller.setText("Black wins");
+                            break;
+                        case 2:
+                            diceRoller.setText("White wins");
+                            break;
+                    }
                 }
             }
+        }
         draw();
     }
 
-
+    private boolean canMove() {
+        for (int element : step) {
+            for (int i = 0; i < 24; i++) {
+                if (isWhite) {
+                    if (!gameBoard.getTriangle(i + element).isBlack()) {
+                        return true;
+                    }
+                } else {
+                    if (gameBoard.getTriangle(i + element).isWhite()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     @FXML
     void setValue1(MouseEvent event) {
@@ -403,4 +439,8 @@ public class GameInterface {
         setValue(23);
     }
 
+    @FXML
+    private void outThrow(MouseEvent event) {
+        setValue(1000);
+    }
 }

@@ -34,6 +34,8 @@ public class Triangle {
         return this.color == Color.BLACK;
     }
 
+    public boolean isWhite() {return  this.color == Color.WHITE;}
+
     public boolean addChecker(Color color) {
         if (!color.equals(this.color) && !this.color.equals(Color.EMPTY)) {
             return false;

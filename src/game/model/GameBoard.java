@@ -21,7 +21,11 @@ public class GameBoard {
         } else current = Color.BLACK;
         if (endPosition == 1000) {
             board[initialPosition].removeChecker();
-            outCounterWhite++;
+            if (current == Color.BLACK){
+                outCounterBlack++;
+            } else {
+                outCounterWhite++;
+            }
             return true;
         }
         if (!current.equals(board[initialPosition].getColor())) return false;
@@ -36,6 +40,24 @@ public class GameBoard {
         return true;
     }
 
+    public boolean canThrowAway(boolean isWhite){
+        int count = 0;
+        if (isWhite) {
+            for (int i = 18; i < 24; i++){
+                if (board[i].getColor().equals(Color.WHITE)) {
+                    count += board[i].getAmount();
+                }
+            }
+            return count + outCounterWhite == 15;
+        } else {
+            for (int i = 6; i < 12; i++){
+                if (board[i].getColor().equals(Color.BLACK)){
+                    count += board[i].getAmount();
+                }
+            }
+            return count + outCounterBlack == 15;
+        }
+    }
 
     public int isWinGame() {
         if (outCounterBlack == 15) {
