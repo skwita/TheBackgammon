@@ -1,7 +1,5 @@
 package game.model;
 
-enum Color {EMPTY, WHITE, BLACK}
-
 public class Triangle {
     private int amount;
     private Color color = Color.EMPTY;

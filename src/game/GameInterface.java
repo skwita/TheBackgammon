@@ -247,8 +247,11 @@ public class GameInterface {
                             isOk = false;
                             break;
                         }
-                        step.remove(i);
-                        break;
+                        if (gameBoard.getTriangle(triangleNumberLast).getColor() == gameBoard.getTriangle(triangleNumberFirst).getColor() ||
+                                gameBoard.getTriangle(triangleNumberLast).getColor() == Color.EMPTY) {
+                            step.remove(i);
+                            break;
+                        } else isOk = false;
                     }
                 }
 
@@ -290,15 +293,29 @@ public class GameInterface {
 
     private boolean canMove() {
         for (int element : step) {
-            for (int i = 0; i < 24; i++) {
+            for (int i = 0; i < 24 - element; i++) {
                 if (isWhite) {
+                    if (i > 17 && i + element > 23) return true; // out
                     if (!gameBoard.getTriangle(i + element).isBlack()) {
                         return true;
                     }
                 } else {
-                    if (gameBoard.getTriangle(i + element).isWhite()) {
-                        return true;
+                    if (i + element <= 23 && i > 11) { // lower row
+                        if (!gameBoard.getTriangle(i + element).isWhite()) {
+                            return true;
+                        }
                     }
+                    if (i < 11 - element) { // upper row
+                        if (!gameBoard.getTriangle(i + element).isWhite()) {
+                            return true;
+                        }
+                    }
+                    if (i > 17 && 24 - i + element < 6) { // from lower to upper row (border)
+                        if (!gameBoard.getTriangle(24 - i + element).isWhite()) {
+                            return true;
+                        }
+                    }
+                    if (i > 5 && i + element > 11) return true; // out
                 }
             }
         }
