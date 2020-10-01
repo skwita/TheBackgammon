@@ -14,6 +14,12 @@ public class GameBoard {
         }
     }
 
+    public void setOutCounterBlack (int num) {this.outCounterBlack = num;}
+
+    public void setOutCounterWhite (int num) {this.outCounterWhite = num;}
+
+    public Triangle getTriangle(int num) {return board[num];}
+
     public boolean step(boolean isWhite, int initialPosition, int endPosition) {
         Color current;
         if (isWhite){
@@ -84,9 +90,5 @@ public class GameBoard {
             steps.add(secondDice);
         }
         return steps;
-    }
-
-    public game.model.Triangle getTriangle(int num) {
-        return board[num];
     }
 }

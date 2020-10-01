@@ -6,8 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +16,7 @@ public class GameInterface {
     private HashMap<Integer, Image> picturesBlack;
     private HashMap<Integer, Image> picturesWhite;
     private HashMap<Integer, Image> dices;
-    private GameBoard gameBoard;
+    private final GameBoard gameBoard;
     private Integer triangleNumberFirst;
     private Integer triangleNumberLast;
     private ArrayList<Integer> step;
@@ -28,15 +26,6 @@ public class GameInterface {
     private String turn = "White turn";
     private boolean isEquals;
     private boolean isTurnFromHead = false;
-
-    @FXML
-    private FlowPane upperPart;
-
-    @FXML
-    private FlowPane upperLeft;
-
-    @FXML
-    private FlowPane lowerRight;
 
     @FXML
     private ImageView tr12;
@@ -73,9 +62,6 @@ public class GameInterface {
 
     @FXML
     private ImageView tr1;
-
-    @FXML
-    private FlowPane lowerPart;
 
     @FXML
     private ImageView tr13;
@@ -320,127 +306,127 @@ public class GameInterface {
     }
 
     @FXML
-    void setValue1(MouseEvent event) {
+    void setValue1() {
         setValue(0);
     }
 
     @FXML
-    void setValue2(MouseEvent event) {
+    void setValue2() {
         setValue(1);
     }
 
     @FXML
-    void setValue3(MouseEvent event) {
+    void setValue3() {
         setValue(2);
     }
 
     @FXML
-    void setValue4(MouseEvent event) {
+    void setValue4() {
         setValue(3);
     }
 
     @FXML
-    void setValue5(MouseEvent event) {
+    void setValue5() {
         setValue(4);
     }
 
     @FXML
-    void setValue6(MouseEvent event) {
+    void setValue6() {
         setValue(5);
     }
 
     @FXML
-    void setValue7(MouseEvent event) {
+    void setValue7() {
         setValue(6);
     }
 
     @FXML
-    void setValue8(MouseEvent event) {
+    void setValue8() {
         setValue(7);
     }
 
     @FXML
-    void setValue9(MouseEvent event) {
+    void setValue9() {
         setValue(8);
     }
 
     @FXML
-    void setValue10(MouseEvent event) {
+    void setValue10() {
         setValue(9);
     }
 
     @FXML
-    void setValue11(MouseEvent event) {
+    void setValue11() {
         setValue(10);
     }
 
     @FXML
-    void setValue12(MouseEvent event) {
+    void setValue12() {
         setValue(11);
     }
 
     @FXML
-    void setValue13(MouseEvent event) {
+    void setValue13() {
         setValue(12);
     }
 
     @FXML
-    void setValue14(MouseEvent event) {
+    void setValue14() {
         setValue(13);
     }
 
     @FXML
-    void setValue15(MouseEvent event) {
+    void setValue15() {
         setValue(14);
     }
 
     @FXML
-    void setValue16(MouseEvent event) {
+    void setValue16() {
         setValue(15);
     }
 
     @FXML
-    void setValue17(MouseEvent event) {
+    void setValue17() {
         setValue(16);
     }
 
     @FXML
-    void setValue18(MouseEvent event) {
+    void setValue18() {
         setValue(17);
     }
 
     @FXML
-    void setValue19(MouseEvent event) {
+    void setValue19() {
         setValue(18);
     }
 
     @FXML
-    void setValue20(MouseEvent event) {
+    void setValue20() {
         setValue(19);
     }
 
     @FXML
-    void setValue21(MouseEvent event) {
+    void setValue21() {
         setValue(20);
     }
 
     @FXML
-    void setValue22(MouseEvent event) {
+    void setValue22() {
         setValue(21);
     }
 
     @FXML
-    void setValue23(MouseEvent event) {
+    void setValue23() {
         setValue(22);
     }
 
     @FXML
-    void setValue24(MouseEvent event) {
+    void setValue24() {
         setValue(23);
     }
 
     @FXML
-    private void outThrow(MouseEvent event) {
+    private void outThrow() {
         setValue(1000);
     }
 }

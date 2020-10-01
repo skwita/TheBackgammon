@@ -30,6 +30,8 @@ public class Triangle {
         return color;
     }
 
+    public  void setTriangle(int num, Color color){ this.amount = num; this.color = color;}
+
     public boolean isBlack(){
         return this.color == Color.BLACK;
     }
@@ -52,5 +54,15 @@ public class Triangle {
             color = Color.EMPTY;
         }
         amount--;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this)
+            return true;
+        if (!(o instanceof Triangle))
+            return false;
+        Triangle other = (Triangle) o;
+        return other.color == color && other.amount == amount;
     }
 }
